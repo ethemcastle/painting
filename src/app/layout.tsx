@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Painting Studio",
-  description: "A tiny browser-based paint app built with Next.js and the HTML Canvas API.",
+  title: "TrueCoat Painting Co. — Professional Wall Painting",
+  description:
+    "Interior and exterior wall painting done right. Licensed, insured, and trusted for 1,500+ projects. Get a free, fixed-price quote within one business day.",
 };
 
 export default function RootLayout({
