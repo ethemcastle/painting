@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const NAV_LINKS = [
@@ -41,35 +42,15 @@ export function SiteHeader() {
             : "border-transparent bg-transparent px-9 py-[22px]"
         }`}
       >
-        <a
-          href="#top"
-          className="font-serif flex items-center gap-3 text-[22px] font-medium leading-none tracking-[-0.02em]"
-        >
-          <span
-            className="block h-[26px] w-[26px] overflow-hidden rounded-full"
-            style={{
-              background: "var(--current)",
-              transition: "background 0.8s cubic-bezier(0.7,0,0.2,1)",
-            }}
-            aria-hidden="true"
+        <a href="#top" className="flex items-center gap-2">
+          <Image
+            src="/logo.png"
+            alt="Painting Your World LLC"
+            width={120}
+            height={60}
+            className="h-auto w-auto"
+            priority
           />
-          <span>
-            Painting{" "}
-            <em
-              className="font-italic"
-              style={{
-                color: "var(--current)",
-                transition: "color 0.8s cubic-bezier(0.7,0,0.2,1)",
-                fontStyle: "italic",
-              }}
-            >
-              Your
-            </em>{" "}
-            World
-            <span className="font-mono ml-1.5 align-top text-[10px] tracking-[0.18em] text-[color:var(--ink-muted)]">
-              LLC
-            </span>
-          </span>
         </a>
 
         <ul className="font-mono hidden items-center gap-[34px] text-[11px] uppercase tracking-[0.14em] text-[color:var(--ink-soft)] md:flex">
