@@ -49,7 +49,7 @@ export function SiteHeader() {
             width={120}
             height={60}
             className="h-auto w-auto"
-            style={{ filter: "brightness(0)" }}
+            style={{ mixBlendMode: "darken" }}
             priority
           />
         </a>
