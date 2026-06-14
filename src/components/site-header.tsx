@@ -49,7 +49,7 @@ export function SiteHeader() {
             width={120}
             height={60}
             className="h-auto w-auto"
-            style={{ mixBlendMode: "darken" }}
+            style={{ filter: "invert(1) saturate(1.5) hue-rotate(180deg)" }}
             priority
           />
         </a>
