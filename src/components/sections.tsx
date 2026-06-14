@@ -213,56 +213,112 @@ export function Promises() {
 
 /* ============================================================ services */
 
+type ServiceIconKind =
+  | "interior"
+  | "exterior"
+  | "trim-doors"
+  | "ceilings"
+  | "floors"
+  | "epoxy";
+
 type Service = {
   title: string;
   em: string;
-  body: string;
+  body: React.ReactNode;
   tag: string;
-  icon: "interior" | "exterior" | "drywall" | "vinyl" | "trim-doors" | "cabinets";
+  icon: ServiceIconKind;
 };
 
 const SERVICES: Service[] = [
   {
     title: "Interior",
-    em: "painting.",
-    body: "Living rooms, bedrooms, hallways, ceilings. Walls washed, holes filled, edges taped — then two coats by hand for a smooth, even finish.",
-    tag: "Two-coat finish",
+    em: "walls.",
+    body: (
+      <>
+        Living rooms, bedrooms, kitchens. Two coats over fresh primer,{" "}
+        <em className="font-italic text-[color:var(--ink)]" style={{ fontStyle: "italic" }}>
+          edges hand-cut
+        </em>{" "}
+        by brush.
+      </>
+    ),
+    tag: "From $320 / room",
     icon: "interior",
   },
   {
     title: "Exterior",
-    em: "painting.",
-    body: "Siding, stucco, doors, decks. Weather-tested coatings, careful prep, neat edges around windows and trim. Long-lasting through Philly seasons.",
-    tag: "Weather-tested",
+    em: "facades.",
+    body: (
+      <>
+        Siding, stucco, brick, weatherboard.{" "}
+        <em className="font-italic text-[color:var(--ink)]" style={{ fontStyle: "italic" }}>
+          Weatherproof
+        </em>{" "}
+        exterior paints, sealed against rain and sun.
+      </>
+    ),
+    tag: "Quoted per facade",
     icon: "exterior",
-  },
-  {
-    title: "Drywall",
-    em: "repair.",
-    body: "Holes patched, cracks taped, dents skim-coated and sanded flat. Walls look new before we even open a paint can.",
-    tag: "Sanded smooth",
-    icon: "drywall",
-  },
-  {
-    title: "Vinyl",
-    em: "flooring.",
-    body: "Luxury vinyl plank and tile — quiet underfoot, water-resistant, and ready to live on. Subfloor leveled, joints staggered, transitions clean.",
-    tag: "Click-lock plank",
-    icon: "vinyl",
   },
   {
     title: "Trim &",
     em: "doors.",
-    body: "Architraves, skirting, doors, and casings — brushed by hand, sanded between coats. Crisp lines where the wall meets the trim.",
-    tag: "Hand-brushed",
+    body: (
+      <>
+        Skirting, architrave, doors, window frames.{" "}
+        <em className="font-italic text-[color:var(--ink)]" style={{ fontStyle: "italic" }}>
+          Hand-brushed
+        </em>{" "}
+        in oil or water-based enamel for a smooth finish.
+      </>
+    ),
+    tag: "From $200 / door",
     icon: "trim-doors",
   },
   {
-    title: "Kitchen",
-    em: "cabinets.",
-    body: "Doors and frames degreased, lightly sanded, primed and sprayed to a factory-smooth finish in the color of your choice.",
-    tag: "Factory-smooth",
-    icon: "cabinets",
+    title: "Ceilings &",
+    em: "cornicing.",
+    body: (
+      <>
+        White ceilings, decorative cornices, picture rails.{" "}
+        <em className="font-italic text-[color:var(--ink)]" style={{ fontStyle: "italic" }}>
+          Brush-cut
+        </em>{" "}
+        along every edge, never sprayed.
+      </>
+    ),
+    tag: "From $260 / ceiling",
+    icon: "ceilings",
+  },
+  {
+    title: "Parquet &",
+    em: "floors.",
+    body: (
+      <>
+        Old wood, new finish. Sanded, stained, sealed — or painted:{" "}
+        <em className="font-italic text-[color:var(--ink)]" style={{ fontStyle: "italic" }}>
+          chalk-white grids
+        </em>
+        , marine-blue lines, checkered halls.
+      </>
+    ),
+    tag: "From $520 / room",
+    icon: "floors",
+  },
+  {
+    title: "Epoxy",
+    em: "floors.",
+    body: (
+      <>
+        Garages, basements, workshops.{" "}
+        <em className="font-italic text-[color:var(--ink)]" style={{ fontStyle: "italic" }}>
+          Resin-bound flake coat
+        </em>{" "}
+        — non-slip, oil-proof, scrubbable. Two-day cure.
+      </>
+    ),
+    tag: "From $4 / sq ft",
+    icon: "epoxy",
   },
 ];
 
@@ -273,9 +329,9 @@ export function Services() {
       className="panel-sweep relative z-[3] px-10 py-[110px]"
     >
       <SectionMeta
-        left="02 — What we do"
+        left="02 — What we paint"
         center="Six kinds of work"
-        right="Interior · exterior · drywall · vinyl · trim · cabinets"
+        right="Walls · facades · trim · ceilings · floors · epoxy"
       />
       <Reveal>
         <SectionTitle>
@@ -284,7 +340,7 @@ export function Services() {
           to a whole house.
         </SectionTitle>
         <p
-          className="font-serif mt-6 max-w-[480px] text-[17px] leading-[1.55] text-[color:var(--ink-soft)]"
+          className="font-serif mt-6 max-w-[520px] text-[17px] leading-[1.55] text-[color:var(--ink-soft)]"
           style={{ fontVariationSettings: "'opsz' 14" }}
         >
           A small team, careful prep, two coats by hand.{" "}
@@ -292,9 +348,9 @@ export function Services() {
             className="font-italic text-[color:var(--ink)]"
             style={{ fontStyle: "italic" }}
           >
-            Drop cloths, painter&apos;s tape, clean edges
+            Colors from Sherwin-Williams,
           </em>{" "}
-          — every job, every time.
+          drop cloths, painter&apos;s tape, clean edges — every job, every time.
         </p>
       </Reveal>
 
@@ -352,280 +408,216 @@ export function Services() {
   );
 }
 
-/* ─── six distinct line-art service marks, all animated on hover ─── */
+/* ─── service marks ported from the original reference ─── */
 
-function ServiceIcon({ kind }: { kind: Service["icon"] }) {
+const stroke = "#1A1A1A";
+const bone = "#F2EBDC";
+
+function ServiceIcon({ kind }: { kind: ServiceIconKind }) {
   switch (kind) {
-    case "interior":
-      return <InteriorMark />;
-    case "exterior":
-      return <ExteriorMark />;
-    case "drywall":
-      return <DrywallMark />;
-    case "vinyl":
-      return <VinylMark />;
-    case "trim-doors":
-      return <TrimDoorsMark />;
-    case "cabinets":
-      return <CabinetsMark />;
+    case "interior":     return <InteriorMark />;
+    case "exterior":     return <ExteriorMark />;
+    case "trim-doors":   return <TrimDoorsMark />;
+    case "ceilings":     return <CeilingsMark />;
+    case "floors":       return <FloorsMark />;
+    case "epoxy":        return <EpoxyMark />;
   }
 }
 
-const stroke = "#1A1A1A";
-
-/** Room with a roller laying down a band of the live --current color. */
+/** Interior walls — a room outline with a painted strip and a mini roller travelling along it. */
 function InteriorMark() {
   return (
     <svg viewBox="0 0 220 138" className="h-full w-full overflow-visible">
       {/* room outline */}
-      <rect x="6" y="14" width="208" height="108" fill="none" stroke={stroke} strokeOpacity="0.45" strokeWidth="1.5" />
-      <line x1="6" y1="108" x2="214" y2="108" stroke={stroke} strokeOpacity="0.45" strokeWidth="1" />
-      {/* painted band grows from left to right on hover */}
-      <rect
-        x="14"
-        y="22"
-        width="128"
-        height="88"
-        fill="currentColor"
-        opacity="0.92"
-        className="origin-left scale-x-[0.25] transition-transform duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-x-100"
-      />
-      {/* roller, slides across the band */}
-      <g
-        className="group-hover:translate-x-[96px]"
-        style={{ transition: "transform 0.7s cubic-bezier(0.2,0.8,0.2,1)" }}
-      >
-        <rect x="42" y="50" width="44" height="14" rx="2" fill={stroke} />
-        <line x1="64" y1="64" x2="64" y2="78" stroke={stroke} strokeWidth="2.5" strokeLinecap="round" />
-        <line x1="56" y1="78" x2="72" y2="78" stroke={stroke} strokeWidth="2" strokeLinecap="round" />
+      <rect x="6" y="14" width="208" height="108" fill="none" stroke={stroke} strokeWidth="1.5" />
+      <line x1="6" y1="108" x2="214" y2="108" stroke={stroke} strokeWidth="1" />
+      {/* the painted strip on the wall */}
+      <rect className="svc-paint-band" x="42" y="14" width="56" height="94" fill="currentColor" opacity="0.92" />
+      {/* mini roller traveling */}
+      <g className="svc-roller-mini">
+        <rect x="36" y="6" width="68" height="14" rx="2" fill={stroke} />
+        <rect x="38" y="8" width="64" height="10" rx="1.5" fill={bone} />
+        <rect x="40" y="10" width="60" height="6" fill="currentColor" />
+        <line x1="70" y1="20" x2="70" y2="32" stroke={stroke} strokeWidth="2.5" strokeLinecap="round" />
+        <line x1="62" y1="32" x2="78" y2="32" stroke={stroke} strokeWidth="2" strokeLinecap="round" />
+        <line x1="70" y1="32" x2="92" y2="62" stroke={stroke} strokeWidth="3.5" strokeLinecap="round" />
+        <circle cx="94" cy="64" r="3.5" fill="#4A4A4A" />
       </g>
+      {/* a tiny drip */}
+      <path d="M68 108 L68 116 Q70 119 70 116 Z" fill="currentColor" opacity="0.7" />
     </svg>
   );
 }
 
-/** Pitched-roof house with one side painted on hover. */
+/** Exterior facades — a little house with a leaning ladder. */
 function ExteriorMark() {
   return (
     <svg viewBox="0 0 220 138" className="h-full w-full overflow-visible">
-      {/* sky line */}
-      <line x1="6" y1="124" x2="214" y2="124" stroke={stroke} strokeOpacity="0.45" strokeWidth="1.5" />
-      {/* painted left half (revealed on hover) */}
-      <path
-        d="M40 124 L40 64 L110 28 L110 124 Z"
-        fill="currentColor"
-        opacity="0"
-        style={{ transition: "opacity 0.6s ease" }}
-        className="group-hover:opacity-90"
-      />
-      {/* roofline + walls */}
-      <path d="M40 64 L110 28 L180 64" fill="none" stroke={stroke} strokeWidth="1.8" strokeLinejoin="round" />
-      <path d="M40 124 L40 64 M180 124 L180 64" stroke={stroke} strokeWidth="1.5" />
-      <line x1="110" y1="28" x2="110" y2="124" stroke={stroke} strokeWidth="1.2" strokeDasharray="3,3" opacity="0.6" />
+      {/* ground */}
+      <line x1="6" y1="124" x2="214" y2="124" stroke={stroke} strokeWidth="1.5" />
+      {/* house body (the painted exterior) */}
+      <rect className="svc-house-paint" x="40" y="58" width="120" height="66" fill="currentColor" opacity="0.92" />
+      {/* roof */}
+      <polygon points="32,58 100,18 168,58" fill={stroke} />
+      {/* chimney */}
+      <rect x="128" y="26" width="10" height="24" fill={stroke} />
       {/* door */}
-      <rect x="76" y="92" width="20" height="32" fill="none" stroke={stroke} strokeWidth="1.2" />
+      <rect x="92" y="88" width="16" height="36" fill={stroke} />
+      <circle cx="105" cy="106" r="1.2" fill={bone} />
       {/* windows */}
-      <rect x="58" y="78" width="14" height="12" fill="none" stroke={stroke} strokeWidth="1" />
-      <rect x="128" y="78" width="14" height="12" fill="none" stroke={stroke} strokeWidth="1" />
-      <rect x="150" y="78" width="14" height="12" fill="none" stroke={stroke} strokeWidth="1" />
-      {/* paint brush on a ladder, swings up on hover */}
-      <g
-        className="group-hover:-translate-y-3 group-hover:rotate-[-6deg]"
-        style={{
-          transformOrigin: "186px 100px",
-          transition: "transform 0.6s cubic-bezier(0.4,0,0.2,1)",
-        }}
-      >
-        <line x1="186" y1="76" x2="186" y2="118" stroke={stroke} strokeWidth="1.5" />
-        <line x1="180" y1="86" x2="192" y2="86" stroke={stroke} strokeWidth="1" />
-        <line x1="180" y1="100" x2="192" y2="100" stroke={stroke} strokeWidth="1" />
+      <rect x="56" y="74" width="18" height="18" fill={bone} stroke={stroke} strokeWidth="1.5" />
+      <line x1="65" y1="74" x2="65" y2="92" stroke={stroke} strokeWidth="1" />
+      <line x1="56" y1="83" x2="74" y2="83" stroke={stroke} strokeWidth="1" />
+      <rect x="126" y="74" width="18" height="18" fill={bone} stroke={stroke} strokeWidth="1.5" />
+      <line x1="135" y1="74" x2="135" y2="92" stroke={stroke} strokeWidth="1" />
+      <line x1="126" y1="83" x2="144" y2="83" stroke={stroke} strokeWidth="1" />
+      {/* ladder leaning against the right side */}
+      <g className="svc-ladder">
+        <line x1="170" y1="64" x2="176" y2="124" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="178" y1="64" x2="184" y2="124" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="172" y1="80" x2="181" y2="80" stroke={stroke} strokeWidth="1.2" />
+        <line x1="173" y1="94" x2="182" y2="94" stroke={stroke} strokeWidth="1.2" />
+        <line x1="174" y1="108" x2="183" y2="108" stroke={stroke} strokeWidth="1.2" />
       </g>
     </svg>
   );
 }
 
-/** Wall with a hole that gets patched + a putty knife sweeping across. */
-function DrywallMark() {
-  return (
-    <svg viewBox="0 0 220 138" className="h-full w-full overflow-visible">
-      <rect x="6" y="14" width="208" height="108" fill="none" stroke={stroke} strokeOpacity="0.45" strokeWidth="1.5" />
-      {/* the hole */}
-      <path
-        d="M70 56 L96 50 L104 76 L82 88 Z"
-        fill="none"
-        stroke={stroke}
-        strokeWidth="1.4"
-        className="group-hover:opacity-0"
-        style={{ transition: "opacity 0.5s 0.4s ease" }}
-      />
-      {/* the patch (fills in on hover) */}
-      <path
-        d="M70 56 L96 50 L104 76 L82 88 Z"
-        fill="currentColor"
-        opacity="0"
-        className="group-hover:opacity-90"
-        style={{ transition: "opacity 0.6s 0.2s ease" }}
-      />
-      {/* putty knife sweeps left to right */}
-      <g
-        className="group-hover:translate-x-[80px]"
-        style={{
-          transform: "translateX(-30px)",
-          transition: "transform 1s cubic-bezier(0.2,0.8,0.2,1)",
-        }}
-      >
-        <rect x="38" y="60" width="34" height="6" fill={stroke} />
-        <rect x="64" y="58" width="6" height="10" fill="#7A7A7A" />
-        <line x1="70" y1="63" x2="92" y2="63" stroke={stroke} strokeWidth="2.5" strokeLinecap="round" />
-      </g>
-    </svg>
-  );
-}
-
-/** Floor plan with vinyl planks "clicking" in. */
-function VinylMark() {
-  const planks = [
-    { x: 6, y: 24, len: 80 },
-    { x: 88, y: 24, len: 60 },
-    { x: 150, y: 24, len: 64 },
-    { x: 6, y: 48, len: 60 },
-    { x: 62, y: 48, len: 88 },
-    { x: 152, y: 48, len: 62 },
-    { x: 6, y: 72, len: 100 },
-    { x: 108, y: 72, len: 70 },
-    { x: 180, y: 72, len: 34 },
-    { x: 6, y: 96, len: 70 },
-    { x: 78, y: 96, len: 60 },
-    { x: 140, y: 96, len: 74 },
-  ];
-  return (
-    <svg viewBox="0 0 220 138" className="h-full w-full overflow-visible">
-      {planks.map((p, i) => (
-        <g
-          key={i}
-          style={{
-            transform: "translateX(-22px)",
-            opacity: 0,
-            transition: `transform 0.5s cubic-bezier(0.2,0.8,0.2,1) ${
-              i * 0.05
-            }s, opacity 0.4s ${i * 0.05}s`,
-          }}
-          className="group-hover:translate-x-0 group-hover:opacity-100"
-        >
-          <rect
-            x={p.x}
-            y={p.y}
-            width={p.len}
-            height="18"
-            fill="currentColor"
-            opacity="0.75"
-          />
-          <rect
-            x={p.x}
-            y={p.y}
-            width={p.len}
-            height="18"
-            fill="none"
-            stroke={stroke}
-            strokeOpacity="0.55"
-            strokeWidth="0.8"
-          />
-        </g>
-      ))}
-      {/* baseline showing the empty subfloor */}
-      <rect x="6" y="14" width="208" height="108" fill="none" stroke={stroke} strokeOpacity="0.35" strokeWidth="1.2" />
-    </svg>
-  );
-}
-
-/** Door panel + trim molding profile next to it. */
+/** Trim & doors — a panel door with a paint brush dipping into one panel. */
 function TrimDoorsMark() {
   return (
     <svg viewBox="0 0 220 138" className="h-full w-full overflow-visible">
-      {/* baseboard line */}
-      <line x1="6" y1="124" x2="214" y2="124" stroke={stroke} strokeOpacity="0.45" strokeWidth="1.5" />
-      {/* door */}
-      <g>
-        <rect x="34" y="22" width="76" height="102" fill="currentColor" opacity="0" className="group-hover:opacity-90" style={{ transition: "opacity 0.6s ease" }} />
-        <rect x="34" y="22" width="76" height="102" fill="none" stroke={stroke} strokeWidth="1.5" />
-        {/* panels */}
-        <rect x="42" y="32" width="60" height="34" fill="none" stroke={stroke} strokeWidth="1" />
-        <rect x="42" y="74" width="60" height="40" fill="none" stroke={stroke} strokeWidth="1" />
-        {/* knob */}
-        <circle cx="100" cy="74" r="2.5" fill={stroke} />
-      </g>
-      {/* architrave trim, a stylized profile */}
-      <g
-        style={{ transformOrigin: "160px 70px", transition: "transform 0.6s ease" }}
-        className="group-hover:translate-y-[-6px]"
-      >
-        <line x1="138" y1="22" x2="138" y2="124" stroke={stroke} strokeWidth="1.5" />
-        <line x1="146" y1="22" x2="146" y2="124" stroke={stroke} strokeWidth="1" opacity="0.65" />
-        <line x1="154" y1="22" x2="154" y2="124" stroke={stroke} strokeWidth="1.2" />
-        {/* decorative molding curve */}
-        <path
-          d="M154 40 Q166 46 174 40 L178 40 L178 60 Q166 66 158 60 L154 60 Z"
-          fill="currentColor"
-          opacity="0.9"
-        />
-        <path
-          d="M154 80 Q166 86 174 80 L178 80 L178 100 Q166 106 158 100 L154 100 Z"
-          fill="currentColor"
-          opacity="0.7"
-        />
+      {/* door frame */}
+      <rect x="60" y="8" width="100" height="128" fill="none" stroke={stroke} strokeWidth="1.8" />
+      {/* top panel */}
+      <rect x="72" y="20" width="76" height="44" fill="currentColor" opacity="0.92" stroke={stroke} strokeWidth="1" />
+      {/* bottom panel */}
+      <rect x="72" y="70" width="76" height="60" fill="currentColor" opacity="0.92" stroke={stroke} strokeWidth="1" />
+      {/* handle */}
+      <rect x="138" y="88" width="6" height="14" rx="2" fill={stroke} />
+      {/* the dipping brush */}
+      <g className="svc-brush">
+        <rect x="172" y="14" width="6" height="36" fill="#8B6B4A" />
+        <rect x="170" y="10" width="10" height="6" fill={stroke} />
+        <rect x="167" y="48" width="16" height="14" fill="currentColor" opacity="0.95" rx="1" />
+        <line x1="170" y1="62" x2="174" y2="68" stroke="currentColor" strokeWidth="1" opacity="0.7" />
+        <line x1="176" y1="62" x2="178" y2="66" stroke="currentColor" strokeWidth="1" opacity="0.7" />
       </g>
     </svg>
   );
 }
 
-/** A row of kitchen cabinet fronts whose doors open on hover. */
-function CabinetsMark() {
+/** Ceilings & cornicing — a wall + cornice molding with a brush working along it. */
+function CeilingsMark() {
   return (
     <svg viewBox="0 0 220 138" className="h-full w-full overflow-visible">
-      {/* counter line */}
-      <line x1="6" y1="124" x2="214" y2="124" stroke={stroke} strokeOpacity="0.45" strokeWidth="1.5" />
-      <line x1="6" y1="60" x2="214" y2="60" stroke={stroke} strokeOpacity="0.45" strokeWidth="1.2" />
-      {/* upper cabinets */}
-      {[18, 70, 122, 174].map((x, i) => (
-        <g key={`u-${x}`}>
-          <rect
-            x={x}
-            y="14"
-            width="40"
-            height="40"
-            fill="currentColor"
-            opacity="0"
-            style={{ transition: `opacity 0.5s ${i * 0.06}s ease` }}
-            className="group-hover:opacity-90"
-          />
-          <rect x={x} y="14" width="40" height="40" fill="none" stroke={stroke} strokeWidth="1.2" />
-          {/* door split */}
-          <line x1={x + 20} y1="14" x2={x + 20} y2="54" stroke={stroke} strokeWidth="0.8" opacity="0.55" />
-          {/* knobs */}
-          <circle cx={x + 17} cy="34" r="1.4" fill={stroke} />
-          <circle cx={x + 23} cy="34" r="1.4" fill={stroke} />
-        </g>
-      ))}
-      {/* lower cabinets */}
-      {[12, 78, 144].map((x, i) => (
-        <g key={`l-${x}`}>
-          <rect
-            x={x}
-            y="68"
-            width="62"
-            height="52"
-            fill="currentColor"
-            opacity="0"
-            style={{ transition: `opacity 0.5s ${0.18 + i * 0.06}s ease` }}
-            className="group-hover:opacity-80"
-          />
-          <rect x={x} y="68" width="62" height="52" fill="none" stroke={stroke} strokeWidth="1.2" />
-          <rect x={x + 6} y="74" width="50" height="10" fill="none" stroke={stroke} strokeWidth="1" />
-          {/* lower door split */}
-          <line x1={x + 31} y1="86" x2={x + 31} y2="120" stroke={stroke} strokeWidth="0.8" opacity="0.55" />
-          <circle cx={x + 28} cy="100" r="1.4" fill={stroke} />
-          <circle cx={x + 34} cy="100" r="1.4" fill={stroke} />
-        </g>
-      ))}
+      {/* ceiling */}
+      <rect x="6" y="6" width="208" height="34" fill={bone} stroke={stroke} strokeWidth="1" />
+      {/* wall (painted area) */}
+      <rect x="6" y="40" width="208" height="92" fill="currentColor" opacity="0.92" />
+      {/* cornice molding strip */}
+      <rect x="6" y="34" width="208" height="8" fill={bone} stroke={stroke} strokeWidth="0.8" />
+      {/* detailed cornice line being painted */}
+      <line className="svc-cornice-line" x1="14" y1="38" x2="194" y2="38" stroke={stroke} strokeWidth="1" opacity="0.7" />
+      {/* brush working the cornice */}
+      <g className="svc-cornice-brush">
+        <rect x="20" y="44" width="5" height="22" fill="#8B6B4A" transform="rotate(-25 22 55)" />
+        <rect x="17" y="40" width="11" height="6" fill={stroke} transform="rotate(-25 22 43)" />
+        <rect x="14" y="44" width="16" height="10" fill="currentColor" opacity="0.95" rx="1" transform="rotate(-25 22 49)" />
+      </g>
+    </svg>
+  );
+}
+
+/** Parquet & floors — floor planks with a sander rolling across leaving dust. */
+function FloorsMark() {
+  return (
+    <svg viewBox="0 0 220 138" className="h-full w-full overflow-visible">
+      {/* skirting / wall edge at top */}
+      <rect x="6" y="6" width="208" height="28" fill={bone} stroke={stroke} strokeWidth="1" />
+      <rect x="6" y="34" width="208" height="3" fill={stroke} />
+      {/* the floor */}
+      <rect x="6" y="38" width="208" height="94" fill="currentColor" opacity="0.92" />
+      {/* plank seams */}
+      <g stroke={stroke} strokeWidth="0.6" opacity="0.5">
+        <line x1="6" y1="56" x2="214" y2="56" />
+        <line x1="6" y1="74" x2="214" y2="74" />
+        <line x1="6" y1="92" x2="214" y2="92" />
+        <line x1="6" y1="110" x2="214" y2="110" />
+        <line x1="62" y1="38" x2="62" y2="56" />
+        <line x1="116" y1="38" x2="116" y2="56" />
+        <line x1="168" y1="38" x2="168" y2="56" />
+        <line x1="36" y1="56" x2="36" y2="74" />
+        <line x1="90" y1="56" x2="90" y2="74" />
+        <line x1="142" y1="56" x2="142" y2="74" />
+        <line x1="192" y1="56" x2="192" y2="74" />
+        <line x1="70" y1="74" x2="70" y2="92" />
+        <line x1="124" y1="74" x2="124" y2="92" />
+        <line x1="176" y1="74" x2="176" y2="92" />
+        <line x1="48" y1="92" x2="48" y2="110" />
+        <line x1="100" y1="92" x2="100" y2="110" />
+        <line x1="152" y1="92" x2="152" y2="110" />
+        <line x1="200" y1="92" x2="200" y2="110" />
+        <line x1="78" y1="110" x2="78" y2="132" />
+        <line x1="130" y1="110" x2="130" y2="132" />
+        <line x1="182" y1="110" x2="182" y2="132" />
+      </g>
+      {/* subtle grain hint */}
+      <g stroke={stroke} strokeWidth="0.3" opacity="0.28">
+        <line x1="10" y1="47" x2="56" y2="47" strokeDasharray="3,2" />
+        <line x1="124" y1="65" x2="186" y2="65" strokeDasharray="2,3" />
+        <line x1="14" y1="83" x2="60" y2="83" strokeDasharray="2,2" />
+        <line x1="148" y1="101" x2="198" y2="101" strokeDasharray="3,1" />
+      </g>
+      {/* dust trail behind the sander (shows on hover) */}
+      <g className="svc-sander-trail">
+        <line x1="28" y1="84" x2="44" y2="84" stroke={bone} strokeWidth="2.5" opacity="0.7" />
+        <line x1="22" y1="89" x2="38" y2="89" stroke={bone} strokeWidth="1.5" opacity="0.5" />
+        <circle cx="18" cy="86" r="1.5" fill={bone} opacity="0.6" />
+        <circle cx="14" cy="91" r="1" fill={bone} opacity="0.45" />
+        <circle cx="26" cy="79" r="0.8" fill={bone} opacity="0.45" />
+      </g>
+      {/* the floor sander */}
+      <g className="svc-sander">
+        <rect x="46" y="40" width="22" height="5" fill={stroke} rx="1.5" />
+        <line x1="57" y1="45" x2="57" y2="80" stroke={stroke} strokeWidth="3.5" strokeLinecap="round" />
+        <rect x="42" y="78" width="30" height="14" fill={stroke} rx="2" />
+        <rect x="44" y="80" width="26" height="3" fill={bone} opacity="0.4" />
+      </g>
+    </svg>
+  );
+}
+
+/** Epoxy floors — wall + speckled resin floor with a small roller. */
+function EpoxyMark() {
+  return (
+    <svg viewBox="0 0 220 138" className="h-full w-full overflow-visible">
+      <rect x="6" y="6" width="208" height="56" fill={bone} stroke={stroke} strokeWidth="1" />
+      <line x1="6" y1="62" x2="214" y2="62" stroke={stroke} strokeWidth="1.5" />
+      <rect x="6" y="64" width="208" height="68" fill="currentColor" opacity="0.95" />
+      <line x1="14" y1="68" x2="206" y2="68" stroke={bone} strokeWidth="2" opacity="0.32" />
+      <g fill={bone} opacity="0.78">
+        <circle cx="20" cy="78" r="1.2" /><circle cx="35" cy="86" r="0.8" /><circle cx="50" cy="92" r="1.4" />
+        <circle cx="62" cy="80" r="1" /><circle cx="75" cy="100" r="1.2" /><circle cx="92" cy="84" r="0.9" />
+        <circle cx="108" cy="92" r="1.2" /><circle cx="124" cy="78" r="1.1" /><circle cx="138" cy="100" r="1.3" />
+        <circle cx="152" cy="84" r="0.8" /><circle cx="168" cy="92" r="1.1" /><circle cx="184" cy="80" r="1" />
+        <circle cx="198" cy="88" r="1.2" /><circle cx="208" cy="100" r="1" />
+        <circle cx="28" cy="115" r="0.9" /><circle cx="60" cy="122" r="1.2" /><circle cx="100" cy="118" r="1" />
+        <circle cx="140" cy="115" r="1.2" /><circle cx="180" cy="122" r="0.9" />
+      </g>
+      <g fill={stroke} opacity="0.6">
+        <circle cx="28" cy="92" r="0.8" /><circle cx="44" cy="80" r="1" /><circle cx="58" cy="118" r="0.7" />
+        <circle cx="82" cy="92" r="1.1" /><circle cx="118" cy="84" r="0.8" /><circle cx="148" cy="80" r="1" />
+        <circle cx="172" cy="118" r="0.9" /><circle cx="38" cy="125" r="0.6" /><circle cx="98" cy="80" r="0.8" />
+        <circle cx="130" cy="118" r="1" /><circle cx="200" cy="115" r="0.8" />
+      </g>
+      <g className="svc-epoxy-roller">
+        <rect x="30" y="52" width="42" height="10" fill={stroke} rx="1.5" />
+        <rect x="33" y="54" width="36" height="6" fill="currentColor" opacity="0.92" />
+        <line x1="51" y1="62" x2="51" y2="76" stroke={stroke} strokeWidth="2.5" strokeLinecap="round" />
+        <line x1="51" y1="76" x2="80" y2="46" stroke={stroke} strokeWidth="3.5" strokeLinecap="round" />
+        <circle cx="83" cy="44" r="4" fill="#4A4A4A" stroke={stroke} strokeWidth="1" />
+      </g>
     </svg>
   );
 }
@@ -1195,9 +1187,10 @@ export function SiteFooter() {
               className="font-italic text-[color:var(--ink)]"
               style={{ fontStyle: "italic" }}
             >
-              Fully insured,
+              Sherwin-Williams paints,
             </em>{" "}
-            three-year workmanship warranty, free estimate on every job.
+            fully insured, three-year workmanship warranty, free estimate on
+            every job.
           </p>
         </div>
 

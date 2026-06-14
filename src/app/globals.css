@@ -291,6 +291,87 @@ button {
   100% { clip-path: inset(100% 0 0 0); }
 }
 
+/* ─── per-service SVG animations (ported from the original reference) ─── */
+.svc-stroke {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  transition: stroke-dashoffset 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.fancy-pour:hover .svc-stroke {
+  stroke-dashoffset: 0;
+}
+
+.svc-roller-mini {
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.fancy-pour:hover .svc-roller-mini {
+  transform: translateX(58px);
+}
+
+.svc-paint-band {
+  transition: width 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.svc-ladder {
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.fancy-pour:hover .svc-ladder {
+  transform: translateY(-14px);
+}
+
+.svc-house-paint {
+  transition: opacity 0.5s, fill 0.9s;
+}
+
+.svc-brush {
+  transform-origin: 50% 0;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.6, 1);
+}
+.fancy-pour:hover .svc-brush {
+  animation: brushDip 0.9s ease-in-out infinite alternate;
+}
+@keyframes brushDip {
+  from { transform: translateY(0) rotate(-2deg); }
+  to   { transform: translateY(18px) rotate(2deg); }
+}
+
+.svc-cornice-brush {
+  transition: transform 0.9s cubic-bezier(0.7, 0, 0.2, 1);
+}
+.fancy-pour:hover .svc-cornice-brush {
+  transform: translateX(90px);
+}
+
+.svc-cornice-line {
+  stroke-dasharray: 180;
+  stroke-dashoffset: 180;
+  transition: stroke-dashoffset 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.fancy-pour:hover .svc-cornice-line {
+  stroke-dashoffset: 0;
+}
+
+.svc-sander {
+  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.fancy-pour:hover .svc-sander {
+  transform: translateX(98px);
+}
+.svc-sander-trail {
+  opacity: 0;
+  transition: opacity 0.4s 0.15s;
+}
+.fancy-pour:hover .svc-sander-trail {
+  opacity: 1;
+}
+
+.svc-epoxy-roller {
+  transition: transform 0.85s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.fancy-pour:hover .svc-epoxy-roller {
+  transform: translateX(105px);
+}
+
 /* ─── service hover paint-pour ─── */
 .fancy-pour {
   position: relative;
