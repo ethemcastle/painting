@@ -1,27 +1,27 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  ArrowRightIcon,
-  CloseIcon,
-  MenuIcon,
-  PhoneIcon,
-  RollerIcon,
-} from "@/components/icons";
 
 const NAV_LINKS = [
+  { href: "#colors", label: "Colors" },
   { href: "#services", label: "Services" },
-  { href: "#work", label: "Our Work" },
+  { href: "#projects", label: "Projects" },
   { href: "#process", label: "Process" },
-  { href: "#reviews", label: "Reviews" },
+  { href: "#words", label: "Words" },
+  { href: "#contact", label: "Contact" },
 ];
 
 export function SiteHeader() {
-  const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 50);
+      const max = document.body.scrollHeight - window.innerHeight;
+      setProgress(max > 0 ? (y / max) * 100 : 0);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -29,107 +29,71 @@ export function SiteHeader() {
 
   return (
     <>
-      <div className="bg-slate-950 text-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-center gap-2 px-4 py-2 text-center text-xs font-medium text-slate-300 sm:px-6">
-          <span className="hidden sm:inline">Now booking summer projects.</span>
-          <span className="text-blue-400">
-            Free color consultation with every quote.
-          </span>
-        </div>
-      </div>
-
-      <header
-        className={`sticky top-0 z-50 border-b transition-colors duration-300 ${
+      <div
+        className="scroll-progress"
+        style={{ width: `${progress}%` }}
+        aria-hidden="true"
+      />
+      <nav
+        className={`fixed inset-x-0 top-0 z-[100] flex items-center justify-between border-b transition-all duration-500 ${
           scrolled
-            ? "border-slate-200 bg-white/90 shadow-sm backdrop-blur"
-            : "border-transparent bg-white/70 backdrop-blur"
+            ? "border-[color:var(--hair)] bg-white/85 px-9 py-3.5 backdrop-blur-md"
+            : "border-transparent bg-transparent px-9 py-[22px]"
         }`}
       >
-        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
-          <a
-            href="#top"
-            className="group flex items-center gap-2 font-bold tracking-tight text-slate-900"
-          >
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-sm transition group-hover:scale-105">
-              <RollerIcon className="h-5 w-5" />
+        <a
+          href="#top"
+          className="font-serif flex items-center gap-3 text-[22px] font-medium leading-none tracking-[-0.02em]"
+        >
+          <span
+            className="block h-[26px] w-[26px] overflow-hidden rounded-full"
+            style={{
+              background: "var(--current)",
+              transition: "background 0.8s cubic-bezier(0.7,0,0.2,1)",
+            }}
+            aria-hidden="true"
+          />
+          <span>
+            Painting{" "}
+            <em
+              className="font-italic"
+              style={{
+                color: "var(--current)",
+                transition: "color 0.8s cubic-bezier(0.7,0,0.2,1)",
+                fontStyle: "italic",
+              }}
+            >
+              Your
+            </em>{" "}
+            World
+            <span className="font-mono ml-1.5 align-top text-[10px] tracking-[0.18em] text-[color:var(--ink-muted)]">
+              LLC
             </span>
-            <span className="text-lg">
-              True<span className="text-blue-600">Coat</span>
-            </span>
-          </a>
+          </span>
+        </a>
 
-          <nav className="hidden items-center gap-1 md:flex">
-            {NAV_LINKS.map((link) => (
+        <ul className="font-mono hidden items-center gap-[34px] text-[11px] uppercase tracking-[0.14em] text-[color:var(--ink-soft)] md:flex">
+          {NAV_LINKS.map((link) => (
+            <li key={link.href}>
               <a
-                key={link.href}
                 href={link.href}
-                className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+                className="nav-link relative inline-block overflow-hidden py-1.5"
+                data-text={link.label}
               >
-                {link.label}
+                <span>{link.label}</span>
               </a>
-            ))}
-          </nav>
+            </li>
+          ))}
+        </ul>
 
-          <div className="hidden items-center gap-1.5 md:flex">
-            <a
-              href="tel:+15550102837"
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 transition hover:text-blue-600"
-            >
-              <PhoneIcon className="h-4 w-4" />
-              (555) 010-2837
-            </a>
-            <a
-              href="#contact"
-              className="group inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-blue-600/25 transition hover:-translate-y-0.5 hover:shadow-md"
-            >
-              Free quote
-              <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </a>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setOpen((value) => !value)}
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            className="flex h-10 w-10 items-center justify-center rounded-lg text-slate-700 transition hover:bg-slate-100 md:hidden"
-          >
-            {open ? <CloseIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
-          </button>
-        </div>
-
-        {open && (
-          <div className="border-t border-slate-200 bg-white md:hidden">
-            <nav className="mx-auto flex w-full max-w-6xl flex-col gap-1 px-4 py-3 sm:px-6">
-              {NAV_LINKS.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="rounded-lg px-2 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
-                >
-                  {link.label}
-                </a>
-              ))}
-              <a
-                href="tel:+15550102837"
-                className="rounded-lg px-2 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
-              >
-                Call (555) 010-2837
-              </a>
-              <a
-                href="#contact"
-                onClick={() => setOpen(false)}
-                className="mt-1 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2.5 text-center text-sm font-semibold text-white"
-              >
-                Get a free quote
-              </a>
-            </nav>
-          </div>
-        )}
-      </header>
+        <a
+          href="#contact"
+          className="font-mono cta-fill inline-flex items-center gap-2 rounded-full bg-[color:var(--ink)] px-[18px] py-2.5 text-[11px] uppercase tracking-[0.14em] text-white transition-transform duration-300"
+        >
+          <span>Book a visit</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+      </nav>
     </>
   );
 }
-
-

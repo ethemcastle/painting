@@ -1,19 +1,19 @@
-import { SiteHeader } from "@/components/site-header";
+import { Contact } from "@/components/contact";
+import { Hero } from "@/components/hero";
+import { Marquee } from "@/components/marquee";
 import {
-  BeforeAfterSection,
-  ColorShowcase,
-  Contact,
-  CtaBand,
-  Gallery,
-  Hero,
-  LogoMarquee,
+  Cta,
+  FooterWordmark,
   Process,
+  Projects,
+  Promises,
   Services,
   SiteFooter,
-  StatsBand,
+  Stats,
   Testimonials,
-  WhyUs,
 } from "@/components/sections";
+import { SiteHeader } from "@/components/site-header";
+import { SwatchTray } from "@/components/swatch-tray";
 
 export default function Home() {
   return (
@@ -21,17 +21,17 @@ export default function Home() {
       <SiteHeader />
       <main className="flex-1">
         <Hero />
-        <LogoMarquee />
-        <StatsBand />
+        <SwatchTray />
+        <Marquee />
+        <Stats />
+        <Promises />
         <Services />
-        <WhyUs />
+        <Projects />
         <Process />
-        <BeforeAfterSection />
-        <Gallery />
-        <ColorShowcase />
         <Testimonials />
-        <CtaBand />
         <Contact />
+        <Cta />
+        <FooterWordmark />
       </main>
       <SiteFooter />
     </>

@@ -1,58 +1,75 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ElementType,
+  type ReactNode,
+} from "react";
 
 type RevealProps = {
   children: ReactNode;
   className?: string;
-  delay?: number;
-  /** Render as a different element to keep grid/flow layout intact. */
-  as?: "div" | "li";
+  as?: ElementType;
+  /** add classes that get toggled when the element enters the viewport */
+  inViewClass?: string;
+  /** include the "reveal" base class (default: true) */
+  withBase?: boolean;
+  /** stagger children — applies the same observer with the stagger CSS class */
+  stagger?: boolean;
 };
 
-export function Reveal({ children, className = "", delay = 0, as = "div" }: RevealProps) {
-  const ref = useRef<HTMLDivElement | null>(null);
+export function Reveal({
+  children,
+  className = "",
+  as,
+  inViewClass = "in-view",
+  withBase = true,
+  stagger = false,
+  ...rest
+}: RevealProps & Record<string, unknown>) {
+  const ref = useRef<HTMLElement | null>(null);
   const [shown, setShown] = useState(false);
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
 
-    const reduce =
+    if (
       typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-
-    if (reduce || typeof IntersectionObserver === "undefined") {
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+    ) {
       const raf = requestAnimationFrame(() => setShown(true));
       return () => cancelAnimationFrame(raf);
     }
 
-    const observer = new IntersectionObserver(
+    const io = new IntersectionObserver(
       (entries) => {
         if (entries[0]?.isIntersecting) {
           setShown(true);
-          observer.disconnect();
+          io.disconnect();
         }
       },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+      { threshold: 0.12, rootMargin: "0px 0px -60px 0px" },
     );
-
-    observer.observe(node);
-    return () => observer.disconnect();
+    io.observe(node);
+    return () => io.disconnect();
   }, []);
 
-  const Tag = as;
+  const Tag = (as ?? "div") as ElementType;
+  const baseClass = stagger ? "reveal-stagger" : "reveal";
+  const finalClass = [
+    withBase ? baseClass : "",
+    shown ? inViewClass : "",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <Tag
-      ref={ref as never}
-      style={{ transitionDelay: `${delay}ms` }}
-      className={`transition-all duration-700 ease-out will-change-transform ${
-        shown ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-      } ${className}`}
-    >
+    <Tag ref={ref} className={finalClass} {...rest}>
       {children}
     </Tag>
   );
 }
-

@@ -1,21 +1,45 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import {
+  Fraunces,
+  Instrument_Serif,
+  Inter_Tight,
+  JetBrains_Mono,
+} from "next/font/google";
 import "./globals.css";
+import { PaintCursor } from "@/components/paint-cursor";
+import { ColorThemeProvider } from "@/components/color-theme";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const fraunces = Fraunces({
+  variable: "--font-serif",
   subsets: ["latin"],
+  axes: ["opsz"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-italic",
   subsets: ["latin"],
+  weight: "400",
+  style: "italic",
+  display: "swap",
+});
+
+const interTight = Inter_Tight({
+  variable: "--font-sans",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "TrueCoat Painting Co. — Professional Wall Painting",
+  title: "Painting Your World LLC — Interior & exterior painting, Philadelphia",
   description:
-    "Interior and exterior wall painting done right. Licensed, insured, and trusted for 1,500+ projects. Get a free, fixed-price quote within one business day.",
+    "Interior & exterior painting, drywall repair, vinyl flooring, trim, doors, and cabinets. Fully insured, 3-year workmanship warranty, free estimates. Philadelphia, PA.",
 };
 
 export default function RootLayout({
@@ -26,9 +50,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${fraunces.variable} ${instrumentSerif.variable} ${interTight.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <PaintCursor />
+        <ColorThemeProvider>{children}</ColorThemeProvider>
+      </body>
     </html>
   );
 }
