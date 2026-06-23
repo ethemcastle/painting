@@ -54,27 +54,29 @@ export function SiteHeader() {
           />
         </a>
 
-        <ul className="font-mono hidden items-center gap-[34px] text-[11px] uppercase tracking-[0.14em] text-[color:var(--ink-soft)] md:flex">
-          {NAV_LINKS.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                className="nav-link relative inline-block overflow-hidden py-1.5"
-                data-text={link.label}
-              >
-                <span>{link.label}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
+        <div className="hidden items-center gap-[34px] md:flex">
+          <ul className="font-mono flex items-center gap-[34px] text-[11px] uppercase tracking-[0.14em] text-[color:var(--ink-soft)]">
+            {NAV_LINKS.map((link) => (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  className="nav-link relative inline-block overflow-hidden py-1.5"
+                  data-text={link.label}
+                >
+                  <span>{link.label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
 
-        <a
-          href="#contact"
-          className="font-mono cta-fill inline-flex items-center gap-2 rounded-full bg-[color:var(--ink)] px-[18px] py-2.5 text-[11px] uppercase tracking-[0.14em] text-white transition-transform duration-300"
-        >
-          <span>Book a visit</span>
-          <span aria-hidden="true">↗</span>
-        </a>
+          <a
+            href="#contact"
+            className="font-mono cta-fill inline-flex items-center gap-2 rounded-full bg-[color:var(--ink)] px-[18px] py-2.5 text-[11px] uppercase tracking-[0.14em] text-white transition-transform duration-300"
+          >
+            <span>Book a visit</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
       </nav>
     </>
   );
