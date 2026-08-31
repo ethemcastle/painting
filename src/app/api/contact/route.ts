@@ -66,7 +66,6 @@ export async function POST(request: Request) {
     const { data, error } = await resend.emails.send({
       from: CONTACT_EMAIL_FROM,
       to: [CONTACT_EMAIL_TO],
-      replyTo: email,
       subject,
       text: [
         `From: ${name} <${email}>`,
@@ -121,7 +120,7 @@ function renderHtml({
     <hr style="border:none; border-top:1px solid #eee; margin:18px 0;">
     <p style="margin:0; white-space:pre-wrap;">${bodyHtml}</p>
     <hr style="border:none; border-top:1px solid #eee; margin:24px 0 12px;">
-    <p style="font-size:12px; color:#8a8a8a; margin:0;">Reply directly to this email to respond to ${esc(name)}.</p>
+    <p style="font-size:12px; color:#8a8a8a; margin:0;">Use the email address above to respond to ${esc(name)}.</p>
   </body>
 </html>`;
 }
