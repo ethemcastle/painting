@@ -4,7 +4,7 @@ export const SITE_TITLE =
   "Painting Your World LLC — Interior & Exterior Painters in Philadelphia";
 export const SITE_DESCRIPTION =
   "Philadelphia interior and exterior painters offering drywall repair, vinyl flooring, trim, doors, cabinets, and free estimates. Fully insured with a 3-year workmanship warranty.";
-export const GOOGLE_ANALYTICS_ID = "G-G52PG8XQ4B";
+export const GOOGLE_ANALYTICS_ID = "G-TX5FQ3BTQ1";
 
 export const BUSINESS_PHONE = "+1-267-227-6745";
 export const BUSINESS_EMAIL = "hoxhajgramoz@gmail.com";
