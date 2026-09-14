@@ -9,6 +9,13 @@ export const metadata: Metadata = {
   title: "Connect with Painting Your World",
   description:
     "Choose how you would like to contact Painting Your World in Philadelphia.",
+  alternates: {
+    canonical: "/connect",
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 export default function ConnectPage() {
