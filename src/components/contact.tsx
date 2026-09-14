@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { Reveal } from "@/components/reveal";
+import { trackContact, trackEvent } from "@/lib/analytics";
 
 const CONTACT_EMAIL = "hoxhajgramoz@gmail.com";
 // E.164 with no leading "+" / spaces — US number (267) 227-6745
@@ -40,6 +41,7 @@ export function Contact() {
         throw new Error(data.error || "Could not send. Try email or WhatsApp.");
       }
       setStatus("sent");
+      trackEvent("generate_lead", { method: "contact_form" });
       setName("");
       setEmail("");
       setMessage("");
@@ -125,6 +127,7 @@ export function Contact() {
               />
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
+                onClick={() => trackContact("email", "contact_section")}
                 className="font-serif text-[15px] normal-case tracking-normal text-[color:var(--ink)] transition-colors duration-500 hover:text-[color:var(--current)]"
                 style={{ fontVariationSettings: "'opsz' 14" }}
               >
@@ -142,6 +145,7 @@ export function Contact() {
               />
               <a
                 href={waHref}
+                onClick={() => trackContact("whatsapp", "contact_section")}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-serif text-[15px] normal-case tracking-normal text-[color:var(--ink)] transition-colors duration-500 hover:text-[color:var(--current)]"
@@ -225,6 +229,9 @@ export function Contact() {
                 </button>
                 <a
                   href={waHref}
+                  onClick={() =>
+                    trackContact("whatsapp", "contact_form_actions")
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-mono group inline-flex items-center justify-center gap-3 rounded-full border border-[color:var(--ink)] px-7 py-4 text-[11px] uppercase tracking-[0.18em] text-[color:var(--ink)] transition-colors duration-300 hover:bg-[color:var(--ink)] hover:text-white"

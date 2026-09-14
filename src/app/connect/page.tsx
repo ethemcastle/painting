@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { TrackedAnchor } from "@/components/tracked-anchor";
 
 const INSTAGRAM_URL =
   process.env.INSTAGRAM_URL?.trim() ||
@@ -113,9 +114,14 @@ function ContactChoice({
   external?: boolean;
 }) {
   return (
-    <a
+    <TrackedAnchor
       href={href}
       rel={external ? "noopener noreferrer" : undefined}
+      eventName="contact_click"
+      eventParameters={{
+        contact_method: external ? "instagram" : "website",
+        contact_location: "connect_page",
+      }}
       className="group flex min-h-[96px] items-center gap-3 rounded-2xl border border-[color:var(--hair-strong)] bg-[color:var(--surface)] p-3 transition duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_12px_30px_rgba(15,15,15,0.09)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[color:var(--ink)] sm:min-h-[112px] sm:gap-5 sm:p-5"
     >
       <span
@@ -142,7 +148,7 @@ function ContactChoice({
       >
         →
       </span>
-    </a>
+    </TrackedAnchor>
   );
 }
 

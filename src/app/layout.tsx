@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import {
   Fraunces,
   Instrument_Serif,
@@ -9,6 +10,7 @@ import "./globals.css";
 import { PaintCursor } from "@/components/paint-cursor";
 import { ColorThemeProvider } from "@/components/color-theme";
 import {
+  GOOGLE_ANALYTICS_ID,
   SITE_DESCRIPTION,
   SITE_NAME,
   SITE_TITLE,
@@ -92,6 +94,19 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <PaintCursor />
         <ColorThemeProvider>{children}</ColorThemeProvider>
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('config', '${GOOGLE_ANALYTICS_ID}');
+          `}
+        </Script>
       </body>
     </html>
   );

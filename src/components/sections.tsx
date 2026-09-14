@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { CountUp } from "@/components/count-up";
 import { Reveal } from "@/components/reveal";
+import { trackContact } from "@/lib/analytics";
 
 /* ============================================================ shared bits */
 
@@ -1208,6 +1209,13 @@ export function SiteFooter() {
                 >
                   <a
                     href={link.href}
+                    onClick={
+                      link.href.startsWith("mailto:")
+                        ? () => trackContact("email", "footer")
+                        : link.href.startsWith("tel:")
+                          ? () => trackContact("phone", "footer")
+                          : undefined
+                    }
                     className="inline-block transition-all duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)] hover:pl-2 hover:text-[color:var(--current)]"
                   >
                     {link.label}
@@ -1257,4 +1265,3 @@ export function SiteFooter() {
     </footer>
   );
 }
-
